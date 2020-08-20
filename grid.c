@@ -179,8 +179,8 @@ void gridInit(Grid *g) {
   //   SigmaZ(pp) = (0.33)*arg*arg*arg;
   // }
   /* TF PML Sigma*/
-  for (pp = 0; pp < PML_no + 1; pp++) {
-    pmpm = (SizeZ - pp);
+  for (pp = 0; pp < PML_no; pp++) {
+    pmpm = (SizeZ - pp - 1);
     arg = (PML_no - pp)/(1.0*PML_no);
     // SigmaZ(pmpm) = (0.33)*arg*arg*arg;
     // SigmaZ(pp) = (0.33)*arg*arg*arg;
@@ -192,7 +192,7 @@ void gridInit(Grid *g) {
  printf("\n \n **************************** \n \n");
     for (pp = 0; pp < SizeZ; pp++) {
 
-      printf("pp is %d, SigmaZ is %f\n",pp, SigmaZ(pp));
+      printf("pp is %d, SigmaZ is %f\n",pp, SigmaZD(pp));
   }
 
   /*Dx PML update constants*/
@@ -227,7 +227,7 @@ void gridInit(Grid *g) {
    printf("\n \n **************************** \n \n");
     for (pp = 0; pp < SizeZ; pp++) {
 
-      printf("pp is %d, SigmaZ H is %f\n",pp, SigmaZ(pp));
+      printf("pp is %d, SigmaZ H is %f\n",pp, SigmaZH(pp));
   }      
   
   /* PML constants for the Z boundary only PML*/
