@@ -179,20 +179,46 @@ void gridInit(Grid *g) {
   //   SigmaZ(pp) = (0.33)*arg*arg*arg;
   // }
   /* TF PML Sigma*/
-  for (pp = 0; pp < PML_no; pp++) {
-    pmpm = (SizeZ - pp - 1);
-    arg = (PML_no - pp)/(1.0*PML_no);
+  int kd = 0;
+  int kh = 0;
+  for (pp = 0; pp < 2*PML_no; pp++) {
+    // pmpm = (SizeZ - 2*PML_no - 1 + pp);
+    arg = (2*PML_no - pp)/(2.0*PML_no);
     // SigmaZ(pmpm) = (0.33)*arg*arg*arg;
     // SigmaZ(pp) = (0.33)*arg*arg*arg;
-
-    SigmaZD(pmpm) = (eps0/(2*dt))*arg*arg*arg;
-    SigmaZD(pp) = (eps0/(2*dt))*arg*arg*arg;
-      printf("pp is %d, geo is %f\n",pp, (PML_no-pp)/(PML_no) );
+    if (pp%2 == 0){
+      pmpm = (SizeZ - kh);
+      SigmaZD(kh) = (eps0/(2*dt))*arg*arg*arg;
+      kh++;
+    }else{
+      pmpm = (SizeZ - kd);
+      SigmaZH(kd) = (eps0/(2*dt))*arg*arg*arg;
+      kd++;
+    }
   }
  printf("\n \n **************************** \n \n");
-    for (pp = 0; pp < SizeZ; pp++) {
-
-      printf("pp is %d, SigmaZ is %f\n",pp, SigmaZD(pp));
+  /* TF PML Sigma*/
+  kd = 0;
+  kh = 0;
+  for (pp = 0; pp < 2*PML_no; pp++) {
+    // pmpm = (SizeZ - 2*PML_no - 1 + pp);
+    arg = (2*PML_no - pp)/(2.0*PML_no);
+    // SigmaZ(pmpm) = (0.33)*arg*arg*arg;
+    // SigmaZ(pp) = (0.33)*arg*arg*arg;
+    if (pp%2 == 0){
+      pmpm = (SizeZ - kh);
+      SigmaZH(pmpm) = (eps0/(2*dt))*arg*arg*arg;
+      kh++;
+    }else{
+      pmpm = (SizeZ - kd);
+      SigmaZD(pmpm) = (eps0/(2*dt))*arg*arg*arg;
+      kd++;
+    }
+  }
+   printf("\n \n **************************** \n \n");
+       for (pp = 0; pp < SizeZ; pp++) {
+      printf("pp is %d, SigmaZ D is %f\n",pp, SigmaZD(pp));
+      printf("pp is %d, SigmaZ H is %f\n",pp, SigmaZH(pp));
   }
 
   /*Dx PML update constants*/
@@ -221,14 +247,11 @@ void gridInit(Grid *g) {
   // }
 
 
-  for (pp = 0; pp < SizeZ - 1; pp++) {
-    SigmaZH(pp) = (SigmaZD(pp) + SigmaZD(pp + 1))/2;
-  }
-   printf("\n \n **************************** \n \n");
-    for (pp = 0; pp < SizeZ; pp++) {
+  // for (pp = 0; pp < SizeZ - 1; pp++) {
+  //   SigmaZH(pp) = (SigmaZD(pp) + SigmaZD(pp - 1))/2;
+  // }
 
-      printf("pp is %d, SigmaZ H is %f\n",pp, SigmaZH(pp));
-  }      
+
   
   /* PML constants for the Z boundary only PML*/
   /*Hx PML update constants*/
